@@ -41,12 +41,10 @@ python -m http.server 8080
 Then open <http://localhost:8080>. Open the file directly with `file://` and the Figma
 embed will be blocked — use the local server.
 
-## Replace the placeholders
+## Assets
 
-| Item | File | Status |
-|---|---|---|
-| Certificate | `assets/img/certificate.jpeg` | ✅ real scan in place |
-| Console screenshot | `assets/img/console-placeholder.svg` | ⬜ still a placeholder — swap the `src` in the `#design` section |
+No placeholders remain — the certificate is the real scan, and the console UI is covered by the
+Figma embed in the `#design` section.
 
 ## Figma embed
 
