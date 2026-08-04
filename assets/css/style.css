@@ -166,13 +166,21 @@ code{font-family:var(--mono);font-size:.85em;background:var(--panel-2);border:1p
 /* ── people ───────────────────────────────────────────────────────── */
 .people{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .person{
-  display:flex;gap:15px;align-items:flex-start;padding:20px;
+  position:relative;display:flex;gap:15px;align-items:flex-start;padding:20px;
   background:var(--panel);border:1px solid var(--line);border-radius:12px;transition:.16s;
+  color:var(--ink);
 }
-.person:hover{border-color:#2e3a52;transform:translateY(-2px)}
+.person:hover{border-color:var(--accent);transform:translateY(-2px);text-decoration:none;background:var(--panel-2)}
 .person.lead{border-color:rgba(77,141,255,.4);background:linear-gradient(180deg,var(--accent-soft),var(--panel) 62%)}
-.person>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.person-body{display:flex;flex-direction:column;gap:3px;min-width:0}
 .person strong{font-size:.97rem;letter-spacing:-.01em}
+.li{
+  position:absolute;top:16px;right:16px;width:22px;height:22px;border-radius:5px;
+  display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);
+  color:var(--ink-3);font-family:var(--mono);font-size:.68rem;font-weight:500;transition:.16s;
+}
+.person:hover .li{background:var(--accent);border-color:var(--accent);color:#04101f}
+.people-note{margin:16px 0 0;font-size:.85rem}
 .avatar{
   flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
   background:var(--panel-2);border:1px solid var(--line);color:var(--accent);
