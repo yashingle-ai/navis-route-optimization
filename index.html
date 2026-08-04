@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NAVIS &mdash; Route Optimization Internship | ElasticRun</title>
+<meta name="description" content="AI Intern at ElasticRun (May–Jul 2026): auto-planning and auto-assignment workflow, route optimization solver, and dispatch pipeline for first-mile and last-mile logistics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚚</text></svg>">
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><span class="brand-mark"></span> NAVIS<span class="brand-dim">/route-planning</span></a>
+    <nav class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#build">What I Built</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#design">Design</a>
+      <a href="#code">Code</a>
+      <a href="#certificate">Certificate</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ───────────────────────────── hero ───────────────────────────── -->
+<section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow">AI Intern &middot; ElasticRun &middot; Pune, India &middot; May&ndash;Jul 2026</p>
+    <h1>Auto-planning &amp; auto-assignment for<br><span class="grad">first-mile and last-mile logistics</span></h1>
+    <p class="lede">
+      I built the planning pipeline behind <strong>NAVIS</strong> &mdash; the workflow that turns a pile of
+      unassigned orders into sequenced routes with riders and vehicles attached, then keeps those routes
+      valid as the day changes.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#build">See the work</a>
+      <a class="btn" href="#code">Codebase &amp; design files</a>
+    </div>
+    <ul class="stat-row">
+      <li><span class="stat-n">2</span><span class="stat-l">Frappe apps<br>extended</span></li>
+      <li><span class="stat-n">3</span><span class="stat-l">Solver variants<br>built</span></li>
+      <li><span class="stat-n">FM+LM</span><span class="stat-l">Unified pickup<br>&amp; delivery model</span></li>
+      <li><span class="stat-n">Live</span><span class="stat-l">Piloted on a<br>real station</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ───────────────────────────── overview ───────────────────────────── -->
+<section id="overview" class="sec">
+  <div class="wrap">
+    <p class="kicker">01 &mdash; Context</p>
+    <h2>The problem</h2>
+    <div class="two-col">
+      <div>
+        <p>
+          A logistics station receives hundreds of orders each morning. Someone has to decide
+          <em>which orders travel together</em>, <em>how many vehicles are needed</em>,
+          <em>who drives each one</em>, and <em>in what order the stops are visited</em> &mdash;
+          all before dispatch, and all under real constraints: vehicle capacity, customer time
+          windows, rider shift limits, and zone rules.
+        </p>
+        <p>
+          That decision was largely manual. My work was to automate it end to end, for both
+          <strong>first-mile</strong> (pickups flowing into the hub) and <strong>last-mile</strong>
+          (deliveries flowing out) in a single unified pipeline rather than two separate systems.
+        </p>
+      </div>
+      <div>
+        <p>
+          The hard constraint was that a middle-mile system was already live and carrying real
+          freight. Nothing I shipped could change its behaviour. Every new path was written as an
+          <strong>additive branch behind a per-station feature flag</strong>, defaulting off &mdash; so
+          rollback was flipping one switch, and the running system never noticed the new code existed.
+        </p>
+        <div class="callout">
+          <span class="callout-tag">Design rule</span>
+          Additive, never mutating. New endpoints and branches beside the existing ones &mdash;
+          never an edit to a live code path.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────────── what I built ───────────────────────────── -->
+<section id="build" class="sec sec-alt">
+  <div class="wrap">
+    <p class="kicker">02 &mdash; Contribution</p>
+    <h2>What I built</h2>
+    <p class="sec-lede">Four pieces, from the optimization core out to the operator-facing flows.</p>
+
+    <div class="cards">
+      <article class="card">
+        <div class="card-ico">◆</div>
+        <h3>Route optimization solver</h3>
+        <p>
+          The sequencing core: given a set of tasks and available vehicles, decide which vehicle
+          serves which stops and in what order. Built as a construction heuristic that seeds an
+          initial solution, then a <strong>Large Neighborhood Search</strong> optimizer that
+          repeatedly destroys and repairs parts of the plan to escape local minima.
+        </p>
+        <ul class="chips">
+          <li>Nearest-insertion</li><li>LNS + simulated annealing</li>
+          <li>Capacity</li><li>Time windows</li><li>Shift limits</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">◈</div>
+        <h3>Solver variants</h3>
+        <p>
+          One engine was not enough for every trip shape. I worked across a
+          <strong>time-dependent</strong> variant that uses real road-network travel times instead of
+          straight-line distance, and a <strong>pickup-and-delivery (PDPTW)</strong> path that keeps a
+          pickup before its matching drop on the same vehicle.
+        </p>
+        <ul class="chips">
+          <li>Time-dependent matrices</li><li>PDPTW</li><li>Road-network ETAs</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">▦</div>
+        <h3>Planning &amp; dispatch workflow</h3>
+        <p>
+          The orchestration layer the console runs on: generate a plan, review the proposed routes,
+          assign riders and vehicles, dispatch the bin, then track it live. Every mutating call is
+          <strong>idempotent</strong> and <strong>station-scoped</strong>, and degrades with an
+          explicit reason instead of failing blind when a dependency is unavailable.
+        </p>
+        <ul class="chips">
+          <li>Plan &rarr; review &rarr; assign</li><li>Dispatch</li><li>Live tracking</li><li>Feature-flagged</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">↻</div>
+        <h3>Mid-day change handling</h3>
+        <p>
+          Plans go stale the moment reality moves. I designed the flows for
+          <strong>dynamic order injection</strong> (new orders arriving after planning) and
+          <strong>reassignment</strong> (a rider goes no-show), plus no-show detection and ETA
+          recompute so the board reflects the truth rather than the morning's assumption.
+        </p>
+        <ul class="chips">
+          <li>Order injection</li><li>Reassignment</li><li>No-show detection</li><li>ETA recompute</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="note">
+      <strong>Honest scope note.</strong> Injection and reassignment are <em>designed and orchestrated</em>
+      &mdash; the flows, contracts and safeguards exist and are wired end to end. True
+      <em>incremental</em> insertion into an already-solved route needs solver support that did not exist
+      yet, so injection currently degrades to a full re-solve and flags itself as degraded rather than
+      silently pretending to be incremental.
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────────── workflow diagrams ───────────────────────────── -->
+<section id="workflow" class="sec">
+  <div class="wrap">
+    <p class="kicker">03 &mdash; System design</p>
+    <h2>Workflow &amp; architecture</h2>
+    <p class="sec-lede">
+      Before writing code I mapped the state machines end to end &mdash; every trigger, poll, and
+      rollback path. Click any diagram to open it full size.
+    </p>
+
+    <figure class="shot wide">
+      <button class="zoom" data-src="assets/img/main-workflow.png" aria-label="Open full size">
+        <img src="assets/img/main-workflow.png" alt="Dispatch bin and planned-rider state machine" loading="lazy">
+      </button>
+      <figcaption>
+        <strong>Auto-assignment state machine.</strong> The full lifecycle: consignments grouped into a
+        dispatch bin, planned riders derived from shift and attendance, rider notifications with timeouts
+        and cancellation, and the polling rules that freeze a bin, mark it ready for dispatch, or escalate
+        to manual intervention.
+      </figcaption>
+    </figure>
+
+    <div class="shot-grid">
+      <figure class="shot">
+        <button class="zoom" data-src="assets/img/ui-wireframe.png" aria-label="Open full size">
+          <img src="assets/img/ui-wireframe.png" alt="Shipment selection and vehicle selection wireframe" loading="lazy">
+        </button>
+        <figcaption>
+          <strong>Operator flow wireframe.</strong> Lane filtering, shipment selection and the guard rails
+          before indent creation &mdash; including the invalid states the UI has to refuse.
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <button class="zoom" data-src="assets/img/assistant-architecture.png" aria-label="Open full size">
+          <img src="assets/img/assistant-architecture.png" alt="Virtual assistant framework architecture" loading="lazy">
+        </button>
+        <figcaption>
+          <strong>Virtual-assistant framework.</strong> A second workstream: letting system experts
+          assemble task-specific assistants from agents and tools, rehearse them in a mock environment,
+          then activate them with confidence.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────────── design ───────────────────────────── -->
+<section id="design" class="sec sec-alt">
+  <div class="wrap">
+    <p class="kicker">04 &mdash; Interface</p>
+    <h2>Console design</h2>
+    <p class="sec-lede">
+      The operator console was designed against a frozen API contract, so frontend and backend could be
+      built in parallel without waiting on each other.
+    </p>
+
+    <div class="embed-frame">
+      <iframe
+        title="Figma design file"
+        src="https://embed.figma.com/design/itkp3xlrElayuQhMKu90ot/Untitled?node-id=0-1&amp;embed-host=share"
+        allowfullscreen loading="lazy"></iframe>
+    </div>
+    <p class="embed-fallback">
+      Embed not loading? <a href="https://www.figma.com/design/itkp3xlrElayuQhMKu90ot/Untitled?node-id=0-1&amp;p=f&amp;t=uVKutwIfMKQSpscY-0" target="_blank" rel="noopener">Open the Figma file directly &rarr;</a>
+      <span class="dim">(the file must be shared as “anyone with the link” for the embed to render)</span>
+    </p>
+
+    <figure class="shot" style="margin-top:2.5rem">
+      <img src="assets/img/console-placeholder.svg" alt="Console screenshot placeholder">
+      <figcaption><strong>Placeholder.</strong> Drop a real console screenshot at
+        <code>assets/img/console-placeholder.svg</code> (or swap the <code>src</code>) to replace this.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ───────────────────────────── code ───────────────────────────── -->
+<section id="code" class="sec">
+  <div class="wrap">
+    <p class="kicker">05 &mdash; Source</p>
+    <h2>Codebase</h2>
+    <p class="sec-lede">Archived snapshots of the two repositories I worked in.</p>
+
+    <div class="link-grid">
+      <a class="link-card" href="https://drive.google.com/file/d/1ubUmJUsBtztdbtZgveZzK0Tueish0jF8/view?usp=sharing" target="_blank" rel="noopener">
+        <span class="link-ico">⌘</span>
+        <span class="link-body">
+          <strong>Backend &amp; solver workspace</strong>
+          <span class="dim">Route-planning module, optimization solvers, orchestration layer and tests.</span>
+        </span>
+        <span class="link-go">↗</span>
+      </a>
+      <a class="link-card" href="https://drive.google.com/file/d/1xs40YB71qwP1r7DQxhr_QvMLblxOgDoK/view?usp=sharing" target="_blank" rel="noopener">
+        <span class="link-ico">◧</span>
+        <span class="link-body">
+          <strong>Frontend console</strong>
+          <span class="dim">Operator-facing console built against the frozen API contract.</span>
+        </span>
+        <span class="link-go">↗</span>
+      </a>
+      <a class="link-card" href="https://www.figma.com/design/itkp3xlrElayuQhMKu90ot/Untitled?node-id=0-1&amp;p=f&amp;t=uVKutwIfMKQSpscY-0" target="_blank" rel="noopener">
+        <span class="link-ico">◇</span>
+        <span class="link-body">
+          <strong>Figma design file</strong>
+          <span class="dim">Screen designs and flows for the console.</span>
+        </span>
+        <span class="link-go">↗</span>
+      </a>
+    </div>
+
+    <h3 class="sub">Stack</h3>
+    <ul class="chips big">
+      <li>Python</li><li>Frappe</li><li>REST APIs</li><li>MariaDB</li><li>Redis</li>
+      <li>Kafka</li><li>Docker</li><li>NumPy</li><li>OR / heuristics</li><li>OSRM &amp; Valhalla</li>
+      <li>Postman</li><li>Git</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ───────────────────────────── certificate ───────────────────────────── -->
+<section id="certificate" class="sec sec-alt">
+  <div class="wrap">
+    <p class="kicker">06 &mdash; Verification</p>
+    <h2>Internship certificate</h2>
+    <figure class="shot cert">
+      <button class="zoom" data-src="assets/img/certificate-placeholder.svg" aria-label="Open full size">
+        <img src="assets/img/certificate-placeholder.svg" alt="Internship certificate placeholder">
+      </button>
+      <figcaption><strong>Placeholder.</strong> Replace
+        <code>assets/img/certificate-placeholder.svg</code> with your scan and update the
+        <code>src</code> / <code>data-src</code> in <code>index.html</code>.</figcaption>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <p>AI Intern &middot; ElasticRun &middot; May&ndash;Jul 2026</p>
+    <p class="dim">Diagrams and code snapshots shared for portfolio purposes.</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" aria-label="Close">&times;</button>
+  <img src="" alt="">
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
