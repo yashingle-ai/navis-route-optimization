@@ -43,10 +43,10 @@ embed will be blocked — use the local server.
 
 ## Replace the placeholders
 
-| Placeholder | File | How |
+| Item | File | Status |
 |---|---|---|
-| Certificate | `assets/img/certificate-placeholder.svg` | Save your scan as `assets/img/certificate.jpg`, then update both `src` and `data-src` in the `#certificate` section of `index.html` |
-| Console screenshot | `assets/img/console-placeholder.svg` | Same — swap the `src` in the `#design` section |
+| Certificate | `assets/img/certificate.jpeg` | ✅ real scan in place |
+| Console screenshot | `assets/img/console-placeholder.svg` | ⬜ still a placeholder — swap the `src` in the `#design` section |
 
 ## Figma embed
 
